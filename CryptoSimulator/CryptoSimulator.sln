@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32819.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoSimulatorApp", "CryptoSimulatorApp\CryptoSimulatorApp.csproj", "{B3CF8F64-06B7-4075-9E99-8549725AF09C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoSimulator.Common", "CryptoSimulator.Common\CryptoSimulator.Common.csproj", "{47EF71F4-42BC-439A-8825-EF6B7AAB9DF3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoSimulator.DataAccess", "CryptoSimulator.DataAccess\CryptoSimulator.DataAccess.csproj", "{AE64BF27-A62C-45E6-A322-330B02FA6A7F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoSimulator.DataModels", "CryptoSimulator.DataModels\CryptoSimulator.DataModels.csproj", "{3446C453-F34B-4A1F-A8E7-307EF5BF97B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoSimulator.DependencyInjection", "CryptoSimulator.DependencyInjection\CryptoSimulator.DependencyInjection.csproj", "{6294C064-BD3D-44F2-8A29-FBAD167FC9E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoSimulator.ServiceModels", "CryptoSimulator.ServiceModels\CryptoSimulator.ServiceModels.csproj", "{9A3F6419-8957-4F30-9DA4-63891A46E697}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoSimulator.Services", "CryptoSimulator.Services\CryptoSimulator.Services.csproj", "{21A3EB84-8E79-43F1-A351-2559C0202511}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B3CF8F64-06B7-4075-9E99-8549725AF09C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3CF8F64-06B7-4075-9E99-8549725AF09C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3CF8F64-06B7-4075-9E99-8549725AF09C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3CF8F64-06B7-4075-9E99-8549725AF09C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47EF71F4-42BC-439A-8825-EF6B7AAB9DF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47EF71F4-42BC-439A-8825-EF6B7AAB9DF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47EF71F4-42BC-439A-8825-EF6B7AAB9DF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47EF71F4-42BC-439A-8825-EF6B7AAB9DF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE64BF27-A62C-45E6-A322-330B02FA6A7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE64BF27-A62C-45E6-A322-330B02FA6A7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE64BF27-A62C-45E6-A322-330B02FA6A7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE64BF27-A62C-45E6-A322-330B02FA6A7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3446C453-F34B-4A1F-A8E7-307EF5BF97B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3446C453-F34B-4A1F-A8E7-307EF5BF97B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3446C453-F34B-4A1F-A8E7-307EF5BF97B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3446C453-F34B-4A1F-A8E7-307EF5BF97B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6294C064-BD3D-44F2-8A29-FBAD167FC9E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6294C064-BD3D-44F2-8A29-FBAD167FC9E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6294C064-BD3D-44F2-8A29-FBAD167FC9E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6294C064-BD3D-44F2-8A29-FBAD167FC9E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A3F6419-8957-4F30-9DA4-63891A46E697}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A3F6419-8957-4F30-9DA4-63891A46E697}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A3F6419-8957-4F30-9DA4-63891A46E697}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A3F6419-8957-4F30-9DA4-63891A46E697}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21A3EB84-8E79-43F1-A351-2559C0202511}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21A3EB84-8E79-43F1-A351-2559C0202511}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21A3EB84-8E79-43F1-A351-2559C0202511}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21A3EB84-8E79-43F1-A351-2559C0202511}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EAC8EF38-3E87-4A00-AD6C-DC6EED1B1827}
+	EndGlobalSection
+EndGlobal
