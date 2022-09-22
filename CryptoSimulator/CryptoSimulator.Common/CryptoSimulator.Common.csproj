@@ -8,6 +8,11 @@
 
   <ItemGroup>
     <Folder Include="CustomExceptions\" />
+    <Folder Include="CustomExceptions\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.9" />
   </ItemGroup>
 
 </Project>
