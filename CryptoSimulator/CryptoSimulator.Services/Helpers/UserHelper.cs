@@ -1,9 +1,11 @@
 ﻿using System.Net.Mail;
 using System.Text.RegularExpressions;
+using System.Security.Cryptography;
+using System.Text.Encodings;
 
 namespace CryptoSimulator.Services.Helpers
 {
-    public class UserValidation
+    public class UserHelper
     {
         public static bool IsValidEmail(string email)
         {
@@ -29,5 +31,12 @@ namespace CryptoSimulator.Services.Helpers
             var match = passwordRegex.Match(password);
             return match.Success;
         }
+
+        //public static string HashPassword(string password)
+        //{
+        //    var hmac = new HMACSHA256();
+        //    var hashedPassword = hmac.
+
+        //}
     }
 }
