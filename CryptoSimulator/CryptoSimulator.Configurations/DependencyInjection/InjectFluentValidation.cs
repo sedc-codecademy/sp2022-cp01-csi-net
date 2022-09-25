@@ -9,7 +9,8 @@ namespace CryptoSimulator.Configurations.DependencyInjection
     {
         public static IServiceCollection RegisterFluentValidation(this IServiceCollection services)
         {
-            services.AddTransient<IValidator<RegisterUser>, RegisterUserValidator>();
+            services.AddScoped<IValidator<RegisterUser>, RegisterUserValidator>();
+            services.AddScoped<IValidator<LoginModel>, LoginModelValidator>();
 
             return services;
         }
