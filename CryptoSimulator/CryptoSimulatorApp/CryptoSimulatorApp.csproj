@@ -16,6 +16,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CryptoSimulator.Common\CryptoSimulator.Common.csproj" />
+    <ProjectReference Include="..\CryptoSimulator.Configurations\CryptoSimulator.Configurations.csproj" />
+    <ProjectReference Include="..\CryptoSimulator.Services\CryptoSimulator.Services.csproj" />
   </ItemGroup>
 
 </Project>
