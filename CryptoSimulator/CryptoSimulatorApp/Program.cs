@@ -1,4 +1,6 @@
+using CryptoSimulator.Common.Models;
 using CryptoSimulator.Configurations.DependencyInjection;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +11,20 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.RegisterFluentValidation();
+// Configuring AppSettings section
+var appConfig = builder.Configuration.GetSection("AppSettings");
+builder.Services.Configure<AppSettings>(appConfig);
+// Using AppSettings
+var appSettings = appConfig.Get<AppSettings>();
+var secret = Encoding.ASCII.GetBytes(appSettings.Secret);
+
+// Inject Dependecies
+builder.Services
+    .RegisterFluentValidation()
+    .RegisterAutoMapper()
+    .RegisterServices()
+    .AddJwtTokenConfiguration(secret);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

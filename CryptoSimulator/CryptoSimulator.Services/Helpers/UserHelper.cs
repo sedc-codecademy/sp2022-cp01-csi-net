@@ -1,42 +1,32 @@
-﻿using System.Net.Mail;
-using System.Text.RegularExpressions;
+﻿using CryptoSimulator.DataModels.Models;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text.Encodings;
+using System.Text;
+using BCryptNet = BCrypt.Net.BCrypt;
 
 namespace CryptoSimulator.Services.Helpers
 {
-    public class UserHelper
+    public static class UserHelper
     {
-        public static bool IsValidEmail(string email)
-        {
-            try
-            {
-                var address = new MailAddress(email);
-                return address.Address == email;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
         public static bool IsValidUsername(string usernameFromDb, string newUsername)
         {
             return !usernameFromDb.Equals(newUsername, StringComparison.InvariantCultureIgnoreCase);
         }
 
-        public static bool IsValidPassword(string password)
+        public static string HashPassword(string password)
         {
-            var passwordRegex = new Regex("^(?=.*[0-9])(?=.*[a-z]).{6,20}$");
-            var match = passwordRegex.Match(password);
-            return match.Success;
+            var hashedPassword = BCryptNet.HashPassword(password);
+            return hashedPassword;
+            
+            //using var hmac = new HMACSHA256();
+            //var hashedPassword = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            //return Encoding.ASCII.GetString(hashedPassword);
+
+            //var md5 = new MD5CryptoServiceProvider();
+            //var md5data = md5.ComputeHash(Encoding.ASCII.GetBytes(password));
+            //return Encoding.ASCII.GetString(md5data);
         }
-
-        //public static string HashPassword(string password)
-        //{
-        //    var hmac = new HMACSHA256();
-        //    var hashedPassword = hmac.
-
-        //}
     }
 }

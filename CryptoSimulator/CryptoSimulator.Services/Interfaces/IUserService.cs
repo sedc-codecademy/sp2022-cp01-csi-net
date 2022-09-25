@@ -1,4 +1,5 @@
-﻿using CryptoSimulator.ServiceModels.UserModels;
+﻿using CryptoSimulator.DataModels.Models;
+using CryptoSimulator.ServiceModels.UserModels;
 
 namespace CryptoSimulator.Services.Interfaces
 {
