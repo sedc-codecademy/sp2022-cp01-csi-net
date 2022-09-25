@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CryptoSimulator.Common\CryptoSimulator.Common.csproj" />
+  </ItemGroup>
+
 </Project>
