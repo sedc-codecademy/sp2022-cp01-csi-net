@@ -14,4 +14,8 @@
     <Folder Include="Mapper\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CryptoSimulator.Common\CryptoSimulator.Common.csproj" />
+  </ItemGroup>
+
 </Project>
