@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CryptoSimulator.Common.Models;
 using CryptoSimulator.DataAccess;
+using CryptoSimulator.DataAccess.Repositories.Interfaces;
 using CryptoSimulator.DataModels.Models;
 using CryptoSimulator.ServiceModels.UserModels;
 using CryptoSimulator.Services.Helpers;
@@ -17,26 +18,27 @@ namespace CryptoSimulator.Services
 {
     public class UserService : IUserService
     {
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IValidator<RegisterUser> _registerUserValidator;
         private readonly IValidator<LoginModel> _loginModelValidator;
         private readonly string _secret;
 
 
-        public UserService(IMapper mapper, IValidator<RegisterUser> registerUserValidator, IValidator<LoginModel> loginModelValidator, IOptions<AppSettings> options)
+        public UserService(IMapper mapper, IValidator<RegisterUser> registerUserValidator, IValidator<LoginModel> loginModelValidator, IOptions<AppSettings> options, IUserRepository userRepository)
         {
             _mapper = mapper;
             _registerUserValidator = registerUserValidator;
             _loginModelValidator = loginModelValidator;
             _secret = options.Value.Secret;
+            _userRepository = userRepository;
         }
 
         public void Register(RegisterUser request)
         {
             _registerUserValidator.ValidateAndThrow(request);
-
-            // ova da se smeni so repository
-            var userFromDb = StaticDB.Users.FirstOrDefault(x => x.Username == request.Username);
+            
+            var userFromDb = _userRepository.GetUserByUsername(request.Username);
 
             if (userFromDb != null)
             {
@@ -46,26 +48,20 @@ namespace CryptoSimulator.Services
             request.Password = UserHelper.HashPassword(request.Password);
 
             var user = _mapper.Map<User>(request);
-
-            // da se napravi wallet i activity log
-
-            // ova da se smeni so repository
-            StaticDB.Users.Add(user);
+ 
+            _userRepository.Insert(user);
         }
 
         public UserLoginDto Login(LoginModel request)
         {
             _loginModelValidator.ValidateAndThrow(request);
 
-            // ova da se smeni so repository
-            var userFromDb = StaticDB.Users.FirstOrDefault(x => x.Username == request.Username);
+            var userFromDb = _userRepository.GetUserByUsername(request.Username);
 
             if (userFromDb is null)
             {
                 throw new Exception("User with that username does not exists");
             }
-
-            var hashedPassword = UserHelper.HashPassword(request.Password);
 
             if (!BCryptNet.Verify(request.Password, userFromDb.Password))
             {
@@ -77,7 +73,7 @@ namespace CryptoSimulator.Services
             var key = Encoding.ASCII.GetBytes(_secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new System.Security.Claims.ClaimsIdentity(
+                Subject = new ClaimsIdentity(
                     new[]
                     {
                         new Claim(ClaimTypes.Name, $"{userFromDb.FirstName} {userFromDb.LastName}"),

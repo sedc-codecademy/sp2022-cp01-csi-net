@@ -4,12 +4,15 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configuring Cors policy
+builder.Services.AddCors(options => options.AddPolicy("myPolicy", policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+
 // Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddSwaggerGen();
 
 // Configuring AppSettings section
 var appConfig = builder.Configuration.GetSection("AppSettings");
@@ -24,9 +27,13 @@ builder.Services
     .RegisterFluentValidation()
     .RegisterAutoMapper()
     .RegisterServices()
-    .AddJwtTokenConfiguration(secret);
+    .RegisterRepositories()
+    .AddJwtTokenConfiguration(secret)
+    .AddSwaggerConfiguration();
 
 var app = builder.Build();
+
+app.UseCors("myPolicy");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

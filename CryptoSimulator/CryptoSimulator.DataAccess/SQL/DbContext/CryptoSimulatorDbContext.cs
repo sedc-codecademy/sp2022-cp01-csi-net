@@ -12,10 +12,10 @@ namespace CryptoSimulator.DataAccess.Data
 
         }
 
-        DbSet<User> Users { get; set; }
-        DbSet<Wallet> Wallets { get; set; }
-        DbSet<Coin> Coins { get; set; }
-        DbSet<Transaction> UserTransactions { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Wallet> Wallets { get; set; }
+        public DbSet<Coin> Coins { get; set; }
+        public DbSet<Transaction> UserTransactions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,9 +33,8 @@ namespace CryptoSimulator.DataAccess.Data
                .HasMany(w => w.Coins)
                .WithOne(c => c.Wallet)
                .HasForeignKey(w => w.WalletId);
-
-
-            DataSeed.InsertDataInDb(modelBuilder);
+            
+            //DataSeed.InsertDataInDb(modelBuilder);
 
         }
 
