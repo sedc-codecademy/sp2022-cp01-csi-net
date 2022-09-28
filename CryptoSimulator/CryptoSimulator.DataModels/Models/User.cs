@@ -7,9 +7,8 @@
         public string Username { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
-        public int WalletId { get; set; }
+        //public string WalletId { get; set; }
         public Wallet Wallet { get; set; }
-        public int ActivityLogId { get; set; }
-        public ActivityLog ActivityLog { get; set; }
+        public ICollection<Transaction> Transactions { get; set; }
     }
 }

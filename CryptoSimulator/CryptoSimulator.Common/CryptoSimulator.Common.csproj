@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -7,8 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="CustomExceptions\" />
-    <Folder Include="CustomExceptions\" />
+    <Compile Remove="CustomExceptions\**" />
+    <EmbeddedResource Remove="CustomExceptions\**" />
+    <None Remove="CustomExceptions\**" />
   </ItemGroup>
 
   <ItemGroup>

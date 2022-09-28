@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -7,13 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.0" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="FluentValidation" Version="11.2.2" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.23.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CryptoSimulator.Common\CryptoSimulator.Common.csproj" />
     <ProjectReference Include="..\CryptoSimulator.DataAccess\CryptoSimulator.DataAccess.csproj" />
     <ProjectReference Include="..\CryptoSimulator.ServiceModels\CryptoSimulator.ServiceModels.csproj" />
   </ItemGroup>
 
 </Project>
+

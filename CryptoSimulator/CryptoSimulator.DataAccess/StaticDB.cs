@@ -1,4 +1,4 @@
-﻿using CryptoSimulator.DataModels.Models;
+using CryptoSimulator.DataModels.Models;
 
 namespace CryptoSimulator.DataAccess
 {
@@ -13,10 +13,10 @@ namespace CryptoSimulator.DataAccess
                 LastName = "Bobsky",
                 Password = "abc123",
                 Email = "bob@gmail.com",
-                Wallet = new Wallet{Id = Guid.Empty, UserId = 1, Cash = 100_000, MaxCoints = 10},
+                Wallet = new Wallet{Id = Guid.Empty, UserId = 1, Cash = 100_000,},
                 Username = "bobsky",
-                ActivityLog = new ActivityLog()
             }
         };
     }
 }
+

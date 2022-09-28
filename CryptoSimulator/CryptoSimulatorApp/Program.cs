@@ -20,6 +20,7 @@ var secret = Encoding.ASCII.GetBytes(appSettings.Secret);
 
 // Inject Dependecies
 builder.Services
+    .InjectAppDbContext(appSettings.ConnectionString)
     .RegisterFluentValidation()
     .RegisterAutoMapper()
     .RegisterServices()
