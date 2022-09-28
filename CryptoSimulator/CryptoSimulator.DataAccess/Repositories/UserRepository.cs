@@ -1,6 +1,7 @@
 ﻿using CryptoSimulator.DataAccess.Data;
 using CryptoSimulator.DataAccess.Repositories.Interfaces;
 using CryptoSimulator.DataModels.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CryptoSimulator.DataAccess.Repositories
 {
@@ -12,7 +13,19 @@ namespace CryptoSimulator.DataAccess.Repositories
 
         public User GetById(int id)
         {
-            throw new NotImplementedException();
+            return null;
+        }
+
+        public User GetUserByUsername(string username)
+        {
+            return _context.Users.FirstOrDefault(x => x.Username == username);
+        }
+
+        public int Insert(User entity)
+        {
+            _context.Users.Add(entity);
+            _context.SaveChanges();
+            return entity.Id;
         }
     }
 }

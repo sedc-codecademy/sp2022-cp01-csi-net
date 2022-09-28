@@ -52,35 +52,6 @@ namespace CryptoSimulator.DataAccess.Migrations
                     b.HasIndex("WalletId");
 
                     b.ToTable("Coins");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CoinId = "btc",
-                            Name = "Bitcoin",
-                            PriceBought = 19000.0,
-                            Quantity = 1.0,
-                            WalletId = new Guid("51aee8e1-c129-4042-b9c0-c1fd13a8ac51")
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CoinId = "btc",
-                            Name = "Bitcoin",
-                            PriceBought = 19000.0,
-                            Quantity = 1.0,
-                            WalletId = new Guid("291354c5-212c-44ba-bcdb-dc8f12b174aa")
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CoinId = "eth",
-                            Name = "Ethereum",
-                            PriceBought = 4000.0,
-                            Quantity = 2.0,
-                            WalletId = new Guid("291354c5-212c-44ba-bcdb-dc8f12b174aa")
-                        });
                 });
 
             modelBuilder.Entity("CryptoSimulator.DataModels.Models.Transaction", b =>
@@ -118,41 +89,6 @@ namespace CryptoSimulator.DataAccess.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserTransactions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BuyOrSell = true,
-                            CoinName = "Bitcoin",
-                            DateCreated = new DateTime(2022, 9, 28, 15, 30, 35, 700, DateTimeKind.Local).AddTicks(3654),
-                            Price = 19000.0,
-                            Quantity = 1.0,
-                            TotalPrice = 19000.0,
-                            UserId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            BuyOrSell = true,
-                            CoinName = "Bitcoin",
-                            DateCreated = new DateTime(2022, 9, 28, 15, 30, 35, 700, DateTimeKind.Local).AddTicks(3692),
-                            Price = 19000.0,
-                            Quantity = 1.0,
-                            TotalPrice = 19000.0,
-                            UserId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            BuyOrSell = true,
-                            CoinName = "Ethereum",
-                            DateCreated = new DateTime(2022, 9, 28, 15, 30, 35, 700, DateTimeKind.Local).AddTicks(3695),
-                            Price = 2000.0,
-                            Quantity = 2.0,
-                            TotalPrice = 4000.0,
-                            UserId = 2
-                        });
                 });
 
             modelBuilder.Entity("CryptoSimulator.DataModels.Models.User", b =>
@@ -186,26 +122,6 @@ namespace CryptoSimulator.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Email = "bob@bobsky.com",
-                            FirstName = "Bob",
-                            LastName = "Bobsky",
-                            Password = "BobBobsky123",
-                            Username = "bobbobsky"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Email = "boba@bobsky.com",
-                            FirstName = "Boba",
-                            LastName = "Bobsky",
-                            Password = "BobaBobsky123",
-                            Username = "bobabobsky"
-                        });
                 });
 
             modelBuilder.Entity("CryptoSimulator.DataModels.Models.Wallet", b =>
@@ -215,10 +131,14 @@ namespace CryptoSimulator.DataAccess.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<double>("Cash")
-                        .HasColumnType("float");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("float")
+                        .HasDefaultValue(100000.0);
 
                     b.Property<double>("MaxCoins")
-                        .HasColumnType("float");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("float")
+                        .HasDefaultValue(10.0);
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -229,22 +149,6 @@ namespace CryptoSimulator.DataAccess.Migrations
                         .IsUnique();
 
                     b.ToTable("Wallets");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("291354c5-212c-44ba-bcdb-dc8f12b174aa"),
-                            Cash = 100000.0,
-                            MaxCoins = 10.0,
-                            UserId = 2
-                        },
-                        new
-                        {
-                            Id = new Guid("51aee8e1-c129-4042-b9c0-c1fd13a8ac51"),
-                            Cash = 100000.0,
-                            MaxCoins = 10.0,
-                            UserId = 1
-                        });
                 });
 
             modelBuilder.Entity("CryptoSimulator.DataModels.Models.Coin", b =>
