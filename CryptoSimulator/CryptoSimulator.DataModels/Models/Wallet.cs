@@ -1,4 +1,4 @@
-﻿namespace CryptoSimulator.DataModels.Models
+namespace CryptoSimulator.DataModels.Models
 {
     public class Wallet
     {
@@ -8,6 +8,5 @@
         public int UserId { get; set; }
         public User User { get; set; }
         public ICollection<Coin> Coins { get; set; }
-       
     }
 }

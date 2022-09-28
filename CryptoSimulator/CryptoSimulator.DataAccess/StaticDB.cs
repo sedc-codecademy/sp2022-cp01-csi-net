@@ -1,4 +1,4 @@
-﻿using CryptoSimulator.DataModels.Models;
+using CryptoSimulator.DataModels.Models;
 
 namespace CryptoSimulator.DataAccess
 {
@@ -19,3 +19,4 @@ namespace CryptoSimulator.DataAccess
         };
     }
 }
+

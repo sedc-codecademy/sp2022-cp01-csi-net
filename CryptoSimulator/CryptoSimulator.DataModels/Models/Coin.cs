@@ -1,4 +1,4 @@
-﻿namespace CryptoSimulator.DataModels.Models
+namespace CryptoSimulator.DataModels.Models
 {
     public class Coin : BaseEntity
     {
