@@ -2,10 +2,15 @@
 {
     public class Transaction : BaseEntity
     {
-        public string Name { get; set; }
-        public int Price { get; set; }
+        public string CoinName { get; set; }
+        public double Price { get; set; }
+        // true == Buy , false == Sell
         public bool BuyOrSell { get; set; }
-        public int Quantity { get; set; }
-        public int TotalPrice { get;  set; }
+        public double Quantity { get; set; }
+        public double TotalPrice { get; set; }
+        public DateTime DateCreated { get; set; }
+        public int UserId { get; set; }
+        public User User { get; set; }
+
     }
 }
