@@ -1,6 +1,13 @@
-namespace CryptoSimulator.DataModels.Models
+﻿using CryptoSimulator.DataModels.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CryptoSimulator.ServiceModels.WalletModels
 {
-    public class Wallet
+    public class WalletDto
     {
         public int Id { get; set; }
         public double MaxCoins { get; set; }

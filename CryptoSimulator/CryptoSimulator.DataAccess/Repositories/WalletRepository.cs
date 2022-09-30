@@ -10,9 +10,30 @@ namespace CryptoSimulator.DataAccess.Repositories
         {
         }
 
-        public Wallet GetById(int id)
+        public Wallet GetById(int userId)
         {
-            throw new NotImplementedException();
+            var user = _context.Users.FirstOrDefault(x => x.Id == userId);
+            var wallet = user.Wallet;
+            return wallet;
         }
+
+        public List<string> GetCoinIDsList()
+        {
+            var coinIdsList = new List<string>();
+            // Here we should get list of the coingecko ids of all the coins we have in the wallet so that we can send a new request to get the current price 
+            return coinIdsList;
+        }
+
+        public void AddCoin()
+        {
+            
+        }
+
+        public void RemoveCoin()
+        {
+
+        }
+
+
     }
 }
