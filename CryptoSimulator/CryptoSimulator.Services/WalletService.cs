@@ -3,6 +3,7 @@ using CryptoSimulator.DataAccess.Repositories.Interfaces;
 using CryptoSimulator.DataModels.Models;
 using CryptoSimulator.ServiceModels.WalletModels;
 using CryptoSimulator.Services.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,26 +59,28 @@ namespace CryptoSimulator.Services
             return 0;
         }
 
-        public double BuyCoins(string coinId, int userId, double amount)
+        public double BuyCoins(BuySellCoinModel model)
         {
             // TODO: consider updating coin data here, and maybe add notification if changes
-            var wallet = GetByUserId(userId);
-            var coin = wallet.Coins.FirstOrDefault(x => x.CoinId == coinId && x.WalletId == wallet.Id);
+            var wallet = GetByUserId(model.UserId);
+            var coin = wallet.Coins.FirstOrDefault(x => x.CoinId == model.CoinId && x.WalletId == wallet.Id);
+            // Get the current price of the coin
+            //let currentCoinPrice = get coin price from coingecko api
             if (coin != null)
             {
-                var user = _userService.GetById(userId);
+                var user = _userService.GetById(model.UserId);
                 var transaction = new Transaction
                 {
                     BuyOrSell = true,
-                    TotalPrice = amount * coin.PriceBought,
+                    TotalPrice = model.Amount * coin.PriceBought, //it should be model.Amount * currentCoinPrice
                     CoinName = coin.Name,
                     DateCreated = DateTime.Now,
-                    Price = coin.PriceBought,
-                    Quantity = amount,
-                    UserId = userId,
+                    Price = coin.PriceBought, //it should be currentCoinPrice
+                    Quantity = model.Amount,
+                    UserId = user.Id,
                     User = user
                 };
-                coin.Quantity += amount;
+                coin.Quantity += model.Amount;
                 wallet.Cash -= transaction.TotalPrice;
                 user.Transactions.Add(transaction);
                 return wallet.Cash;
@@ -93,14 +96,19 @@ namespace CryptoSimulator.Services
         /// <returns></returns>
         /// 
 
-        // https://api.coingecko.com/api/v3/simple/price?{comma-separated coins list}&vs_currencies=usd //api for getting the current price of the coins in the wallet
-        public double CalculateYield(int userId, int coinId, double amount)
+        // https://api.coingecko.com/api/v3/simple/price?ids={comma-separated coins list}&vs_currencies=usd //api for getting the current price of the coins in the wallet
+        public double CalculateYield(int userId, string coinId, double amount)
         {
             List<double> yields = new List<double>();
             var user = _userService.GetById(userId);
             var coins = user.Wallet.Coins;
-            var coinIDs = coins.Select(x => x.CoinId);
-            var coinString = "ids=" + string.Join(",", coinIDs); // use this to update coin values
+            HttpClient client = new HttpClient();
+            var raw = client.GetAsync($"https://api.coingecko.com/api/v3/simple/price?ids={coinId}&vs_currencies=usd").Result.Content.ReadAsStringAsync().Result;
+            var update = JsonConvert.DeserializeObject<dynamic>(raw);
+            double currentPrice = double.Parse(update[coinId]["usd"]);
+            // separate logic for current coin transaction
+            var currentCoinYield = amount * currentPrice;
+            yields.Add(currentCoinYield);
             foreach (var coin in coins)
             {
                 var yield = 0.0;
@@ -108,10 +116,6 @@ namespace CryptoSimulator.Services
                 foreach (var transaction in transactions)
                 {
                     yield += transaction.BuyOrSell ? -transaction.TotalPrice : transaction.TotalPrice;
-                }
-                if (coinId == coin.Id)
-                {
-                    yield += amount * coin.PriceBought;
                 }
                 yields.Add(yield);
             }

@@ -13,7 +13,7 @@ namespace CryptoSimulator.DataAccess.Repositories
 
         public User GetById(int id)
         {
-            return null;
+            return _context.Users.FirstOrDefault(x => x.Id == id);
         }
 
         public User GetUserByUsername(string username)
