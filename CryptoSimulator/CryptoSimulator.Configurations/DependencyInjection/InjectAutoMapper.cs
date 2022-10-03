@@ -8,6 +8,7 @@ namespace CryptoSimulator.Configurations.DependencyInjection
         public static IServiceCollection RegisterAutoMapper(this IServiceCollection services)
         {
             services.AddAutoMapper(typeof(UserMapper));
+            services.AddAutoMapper(typeof(WalletMapper));
 
             return services;
         }

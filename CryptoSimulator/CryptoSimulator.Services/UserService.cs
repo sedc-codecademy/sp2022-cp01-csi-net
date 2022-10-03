@@ -34,6 +34,11 @@ namespace CryptoSimulator.Services
             _userRepository = userRepository;
         }
 
+        public UserService()    // TODO: remove this when proper instances are added to other services that depend on this one
+        {
+            
+        }
+
         public void Register(RegisterUser request)
         {
             _registerUserValidator.ValidateAndThrow(request);
@@ -95,6 +100,11 @@ namespace CryptoSimulator.Services
             };
 
             return loginDto;
+        }
+
+        public User GetById(int userId)
+        {
+            return new User();  // TODO: change this with proper code for retrieving user from DB by Id
         }
     }
 }
