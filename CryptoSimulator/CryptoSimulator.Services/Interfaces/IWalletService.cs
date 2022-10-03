@@ -10,9 +10,9 @@ namespace CryptoSimulator.Services.Interfaces
     public interface IWalletService
     {
         public WalletDto GetByUserId(int userId);
-        public double SellCoins(string coinId, int userId, double amount);
-        public double BuyCoins(string coinId, int userId, double amount);
-        public double CalculateYield(int userId, int coinId, double amount);
+        public double SellCoin(BuySellCoinModel model);
+        public double BuyCoin(BuySellCoinModel model);
+        public double CalculateYield(BuySellCoinModel model);
         public double AddCash(int userId, double amount);
         public void SetMaxCoinLimit(int userId, double limit);
     }

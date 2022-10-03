@@ -32,34 +32,34 @@ namespace CryptoSimulator.Services
             return _mapper.Map<WalletDto>(wallet);
         }
 
-        public double SellCoins(string coinId, int userId, double amount)
+        public double SellCoin(BuySellCoinModel model)
         {
             // TODO: consider updating coin data here, and maybe add notification is changes
-            var wallet = GetByUserId(userId);
-            var coin = wallet.Coins.FirstOrDefault(x => x.CoinId == coinId && x.WalletId == wallet.Id);
+            var wallet = GetByUserId(model.UserId);
+            var coin = wallet.Coins.FirstOrDefault(x => x.CoinId == model.CoinId && x.WalletId == wallet.Id);
             if (coin != null)
             {
-                var user = _userService.GetById(userId);
+                var user = _userService.GetById(model.UserId);
                 var transaction = new Transaction
                 {
                     BuyOrSell = false,
-                    TotalPrice = amount * coin.PriceBought,
+                    TotalPrice = model.Amount * coin.PriceBought,
                     CoinName = coin.Name,
                     DateCreated = DateTime.Now,
                     Price = coin.PriceBought,
-                    Quantity = amount,
-                    UserId = userId,
+                    Quantity = model.Amount,
+                    UserId = model.UserId,
                     User = user
                 };
-                coin.Quantity -= amount;
+                coin.Quantity -= model.Amount;
                 wallet.Cash += transaction.TotalPrice;
                 user.Transactions.Add(transaction);
-                return wallet.Cash;
+                return CalculateYield(model);
             }
             return 0;
         }
 
-        public double BuyCoins(BuySellCoinModel model)
+        public double BuyCoin(BuySellCoinModel model)
         {
             // TODO: consider updating coin data here, and maybe add notification if changes
             var wallet = GetByUserId(model.UserId);
@@ -83,31 +83,31 @@ namespace CryptoSimulator.Services
                 coin.Quantity += model.Amount;
                 wallet.Cash -= transaction.TotalPrice;
                 user.Transactions.Add(transaction);
-                return wallet.Cash;
+                return CalculateYield(model);
             }
             return 0;
         }
         /// <summary>
-        /// Calculated the yield a user is getting if he proceeds with the purchase/sell
+        /// Calculates the total yield of the portfolio after a transaction (buy or sell) is made
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="coinId"></param>
         /// <param name="amount">Amount of coins to buy. Should be negative value if buying (user loses cash when buying), positive if selling (user gains cash when selling)</param>
         /// <returns></returns>
-        /// 
-
         // https://api.coingecko.com/api/v3/simple/price?ids={comma-separated coins list}&vs_currencies=usd //api for getting the current price of the coins in the wallet
-        public double CalculateYield(int userId, string coinId, double amount)
+
+        public double CalculateYield(BuySellCoinModel model)
         {
             List<double> yields = new List<double>();
-            var user = _userService.GetById(userId);
+            var user = _userService.GetById(model.UserId);
             var coins = user.Wallet.Coins;
+            //The logic for getting coins data should be added in another service (coin service)
             HttpClient client = new HttpClient();
-            var raw = client.GetAsync($"https://api.coingecko.com/api/v3/simple/price?ids={coinId}&vs_currencies=usd").Result.Content.ReadAsStringAsync().Result;
+            var raw = client.GetAsync($"https://api.coingecko.com/api/v3/simple/price?ids={model.CoinId}&vs_currencies=usd").Result.Content.ReadAsStringAsync().Result;
             var update = JsonConvert.DeserializeObject<dynamic>(raw);
-            double currentPrice = double.Parse(update[coinId]["usd"]);
+            double currentPrice = double.Parse(update[model.CoinId]["usd"]);
             // separate logic for current coin transaction
-            var currentCoinYield = amount * currentPrice;
+            var currentCoinYield = model.Amount * currentPrice;
             yields.Add(currentCoinYield);
             foreach (var coin in coins)
             {
