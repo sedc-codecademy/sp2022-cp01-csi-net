@@ -44,8 +44,8 @@ namespace CryptoSimulator.DataAccess.Migrations
                     b.Property<double>("Quantity")
                         .HasColumnType("float");
 
-                    b.Property<Guid>("WalletId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("WalletId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -126,19 +126,17 @@ namespace CryptoSimulator.DataAccess.Migrations
 
             modelBuilder.Entity("CryptoSimulator.DataModels.Models.Wallet", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<double>("Cash")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("float")
-                        .HasDefaultValue(100000.0);
+                        .HasColumnType("float");
 
                     b.Property<double>("MaxCoins")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("float")
-                        .HasDefaultValue(10.0);
+                        .HasColumnType("float");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");

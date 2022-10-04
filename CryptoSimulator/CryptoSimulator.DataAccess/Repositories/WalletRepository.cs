@@ -4,13 +4,18 @@ using CryptoSimulator.DataModels.Models;
 
 namespace CryptoSimulator.DataAccess.Repositories
 {
-    public class WalletRepository : BaseRepository, IRepository<Wallet>, IWalletRepository
+    public class WalletRepository : BaseRepository, IWalletRepository
     {
         public WalletRepository(CryptoSimulatorDbContext context) : base(context)
         {
         }
 
-        public Wallet GetById(int userId)
+        public Wallet GetById(int id)
+        {
+            return _context.Wallets.SingleOrDefault(w => w.Id == id);
+        }
+
+        public Wallet GetByUserId(int userId)
         {
             var user = _context.Users.FirstOrDefault(x => x.Id == userId);
             var wallet = user.Wallet;
@@ -24,9 +29,16 @@ namespace CryptoSimulator.DataAccess.Repositories
             return coinIdsList;
         }
 
+        // We may not need this method
+
+        //public IEnumerable<Coin> GetAllCoins(int walletId)
+        //{
+        //    return _context.Coins.Where(c => c.WalletId == walletId);
+        //}
+
         public void AddCoin()
         {
-            
+
         }
 
         public void RemoveCoin()

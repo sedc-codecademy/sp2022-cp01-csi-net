@@ -4,30 +4,25 @@ using CryptoSimulator.DataModels.Models;
 using CryptoSimulator.ServiceModels.WalletModels;
 using CryptoSimulator.Services.Interfaces;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CryptoSimulator.Services
 {
     public class WalletService : IWalletService
     {
-        private readonly IUserService _userService;
+        private readonly IUserRepository _userRepository;
         private readonly IWalletRepository _walletRepository;
         private readonly IMapper _mapper;
 
-        public WalletService(IUserService userService, IWalletRepository walletRepository, IMapper mapper)
+        public WalletService(IUserRepository userRepository, IWalletRepository walletRepository, IMapper mapper)
         {
-            _userService = userService;
+            _userRepository = userRepository;
             _walletRepository = walletRepository;
             _mapper = mapper;
         }
 
         public WalletDto GetByUserId(int userId)
         {
-            var wallet = _walletRepository.GetById(userId);
+            var wallet = _walletRepository.GetByUserId(userId);
 
             return _mapper.Map<WalletDto>(wallet);
         }
@@ -39,7 +34,7 @@ namespace CryptoSimulator.Services
             var coin = wallet.Coins.FirstOrDefault(x => x.CoinId == model.CoinId && x.WalletId == wallet.Id);
             if (coin != null)
             {
-                var user = _userService.GetById(model.UserId);
+                var user = _userRepository.GetById(model.UserId);
                 var transaction = new Transaction
                 {
                     BuyOrSell = false,
@@ -68,7 +63,7 @@ namespace CryptoSimulator.Services
             //let currentCoinPrice = get coin price from coingecko api
             if (coin != null)
             {
-                var user = _userService.GetById(model.UserId);
+                var user = _userRepository.GetById(model.UserId);
                 var transaction = new Transaction
                 {
                     BuyOrSell = true,
@@ -99,7 +94,7 @@ namespace CryptoSimulator.Services
         public double CalculateYield(BuySellCoinModel model)
         {
             List<double> yields = new List<double>();
-            var user = _userService.GetById(model.UserId);
+            var user = _userRepository.GetById(model.UserId);
             var coins = user.Wallet.Coins;
             //The logic for getting coins data should be added in another service (coin service)
             HttpClient client = new HttpClient();
@@ -131,12 +126,23 @@ namespace CryptoSimulator.Services
             return wallet.Cash;
         }
 
-        public void SetMaxCoinLimit(int userId, double limit)
+        // TODO ADD NEW MIGRAITON  ===> CHANGED MAXCOIN TO INT
+        public void SetMaxCoinLimit(int userId, int limit)
         {
-            var user = _userService.GetById(userId);
+            var user = _userRepository.GetById(userId);
             //All the validations (negative number etc. are done on frontend)
             user.Wallet.MaxCoins = limit;
             // update DB 
         }
+
+        public bool IsCoinLimitReached(int walletId)
+        {
+            var wallet = _walletRepository.GetById(walletId);
+            var coinsCount = wallet.Coins.DistinctBy(c => c.CoinId).ToList().Count;
+            return coinsCount == wallet.MaxCoins;
+            //var coins = _walletRepository.GetAllCoins(walletId);
+        }
+
+        
     }
 }

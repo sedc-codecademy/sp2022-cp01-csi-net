@@ -7,9 +7,7 @@ namespace CryptoSimulator.DataAccess.SQL.Data
     {
         internal static void InsertDataInDb(ModelBuilder modelBuilder)
         {
-            Guid walletOneId = Guid.NewGuid();
-            Guid walletTwoId = Guid.NewGuid();
-
+           
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
@@ -33,14 +31,14 @@ namespace CryptoSimulator.DataAccess.SQL.Data
             modelBuilder.Entity<Wallet>().HasData(
                 new Wallet
                 {
-                    Id = walletTwoId,
+                    Id = 2,
                     Cash = 100_000,
                     MaxCoins = 10,
                     UserId = 2,
                 },
                 new Wallet
                 {
-                    Id = walletOneId,
+                    Id = 1,
                     Cash = 100_000,
                     MaxCoins = 10,
                     UserId = 1,
@@ -54,7 +52,7 @@ namespace CryptoSimulator.DataAccess.SQL.Data
                     Name = "Bitcoin",
                     PriceBought = 19_000,
                     Quantity = 1,
-                    WalletId = walletOneId,
+                    WalletId = 1,
                 },
               new Coin
               {
@@ -63,7 +61,7 @@ namespace CryptoSimulator.DataAccess.SQL.Data
                   Name = "Bitcoin",
                   PriceBought = 19_000,
                   Quantity = 1,
-                  WalletId = walletTwoId,
+                  WalletId = 2,
               },
                new Coin
                {
@@ -72,7 +70,7 @@ namespace CryptoSimulator.DataAccess.SQL.Data
                    Name = "Ethereum",
                    PriceBought = 4_000,
                    Quantity = 2,
-                   WalletId = walletTwoId,
+                   WalletId = 2,
                });
 
 

@@ -2,7 +2,7 @@
 
 namespace CryptoSimulator.DataAccess.Repositories.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository : IRepository<User>
     {
         User GetUserByUsername(string username);
         int Insert(User entity);

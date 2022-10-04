@@ -55,7 +55,8 @@ namespace CryptoSimulator.DataAccess.Migrations
                 name: "Wallets",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     MaxCoins = table.Column<double>(type: "float", nullable: false),
                     Cash = table.Column<double>(type: "float", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false)
@@ -81,7 +82,7 @@ namespace CryptoSimulator.DataAccess.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PriceBought = table.Column<double>(type: "float", nullable: false),
                     Quantity = table.Column<double>(type: "float", nullable: false),
-                    WalletId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    WalletId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -93,50 +94,6 @@ namespace CryptoSimulator.DataAccess.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "Email", "FirstName", "LastName", "Password", "Username" },
-                values: new object[] { 1, "bob@bobsky.com", "Bob", "Bobsky", "BobBobsky123", "bobbobsky" });
-
-            migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "Email", "FirstName", "LastName", "Password", "Username" },
-                values: new object[] { 2, "boba@bobsky.com", "Boba", "Bobsky", "BobaBobsky123", "bobabobsky" });
-
-            migrationBuilder.InsertData(
-                table: "UserTransactions",
-                columns: new[] { "Id", "BuyOrSell", "CoinName", "DateCreated", "Price", "Quantity", "TotalPrice", "UserId" },
-                values: new object[,]
-                {
-                    { 1, true, "Bitcoin", new DateTime(2022, 9, 28, 15, 30, 35, 700, DateTimeKind.Local).AddTicks(3654), 19000.0, 1.0, 19000.0, 1 },
-                    { 2, true, "Bitcoin", new DateTime(2022, 9, 28, 15, 30, 35, 700, DateTimeKind.Local).AddTicks(3692), 19000.0, 1.0, 19000.0, 2 },
-                    { 3, true, "Ethereum", new DateTime(2022, 9, 28, 15, 30, 35, 700, DateTimeKind.Local).AddTicks(3695), 2000.0, 2.0, 4000.0, 2 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Wallets",
-                columns: new[] { "Id", "Cash", "MaxCoins", "UserId" },
-                values: new object[,]
-                {
-                    { new Guid("291354c5-212c-44ba-bcdb-dc8f12b174aa"), 100000.0, 10.0, 2 },
-                    { new Guid("51aee8e1-c129-4042-b9c0-c1fd13a8ac51"), 100000.0, 10.0, 1 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Coins",
-                columns: new[] { "Id", "CoinId", "Name", "PriceBought", "Quantity", "WalletId" },
-                values: new object[] { 1, "btc", "Bitcoin", 19000.0, 1.0, new Guid("51aee8e1-c129-4042-b9c0-c1fd13a8ac51") });
-
-            migrationBuilder.InsertData(
-                table: "Coins",
-                columns: new[] { "Id", "CoinId", "Name", "PriceBought", "Quantity", "WalletId" },
-                values: new object[] { 2, "btc", "Bitcoin", 19000.0, 1.0, new Guid("291354c5-212c-44ba-bcdb-dc8f12b174aa") });
-
-            migrationBuilder.InsertData(
-                table: "Coins",
-                columns: new[] { "Id", "CoinId", "Name", "PriceBought", "Quantity", "WalletId" },
-                values: new object[] { 3, "eth", "Ethereum", 4000.0, 2.0, new Guid("291354c5-212c-44ba-bcdb-dc8f12b174aa") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Coins_WalletId",

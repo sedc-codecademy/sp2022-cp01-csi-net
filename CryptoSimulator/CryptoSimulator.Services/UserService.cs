@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using CryptoSimulator.Common.Models;
-using CryptoSimulator.DataAccess;
 using CryptoSimulator.DataAccess.Repositories.Interfaces;
 using CryptoSimulator.DataModels.Models;
 using CryptoSimulator.ServiceModels.UserModels;
@@ -34,15 +33,10 @@ namespace CryptoSimulator.Services
             _userRepository = userRepository;
         }
 
-        public UserService()    // TODO: remove this when proper instances are added to other services that depend on this one
-        {
-            
-        }
-
         public void Register(RegisterUser request)
         {
             _registerUserValidator.ValidateAndThrow(request);
-            
+
             var userFromDb = _userRepository.GetUserByUsername(request.Username);
 
             if (userFromDb != null)
@@ -53,7 +47,7 @@ namespace CryptoSimulator.Services
             request.Password = UserHelper.HashPassword(request.Password);
 
             var user = _mapper.Map<User>(request);
- 
+
             _userRepository.Insert(user);
         }
 
@@ -102,9 +96,6 @@ namespace CryptoSimulator.Services
             return loginDto;
         }
 
-        public User GetById(int userId)
-        {
-            return new User();  // TODO: change this with proper code for retrieving user from DB by Id
-        }
+
     }
 }
