@@ -9,6 +9,7 @@ namespace CryptoSimulator.Configurations.DependencyInjection
         public static IServiceCollection RegisterServices(this IServiceCollection services)
         {
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IWalletService, WalletService>();
 
             return services;
         }

@@ -2,8 +2,9 @@
 
 namespace CryptoSimulator.DataAccess.Repositories.Interfaces
 {
-    public interface IWalletRepository
+    public interface IWalletRepository : IRepository<Wallet>
     {
-        Wallet GetById(int id);
+        Wallet GetByUserId(int userId);
+        //IEnumerable<Coin> GetAllCoins(int walletId);
     }
 }
