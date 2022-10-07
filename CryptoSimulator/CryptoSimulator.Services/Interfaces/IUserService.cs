@@ -7,5 +7,6 @@ namespace CryptoSimulator.Services.Interfaces
     {
         void Register(RegisterUser request);
         UserLoginDto Login(LoginModel request);
+
     }
 }

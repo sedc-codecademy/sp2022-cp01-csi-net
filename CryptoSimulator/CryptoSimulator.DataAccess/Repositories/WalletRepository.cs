@@ -6,20 +6,27 @@ namespace CryptoSimulator.DataAccess.Repositories
 {
     public class WalletRepository : BaseRepository, IWalletRepository
     {
+        
         public WalletRepository(CryptoSimulatorDbContext context) : base(context)
         {
+
         }
 
         public Wallet GetById(int id)
         {
             return _context.Wallets.SingleOrDefault(w => w.Id == id);
+           
         }
 
         public Wallet GetByUserId(int userId)
         {
             var user = _context.Users.FirstOrDefault(x => x.Id == userId);
-            var wallet = user.Wallet;
-            return wallet;
+            var wallet = new Wallet();
+            if (user != null)
+            {
+                wallet = user.Wallet;
+            }
+            return wallet ;
         }
 
         public List<string> GetCoinIDsList()

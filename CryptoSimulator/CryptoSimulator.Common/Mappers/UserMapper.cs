@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CryptoSimulator.DataModels.Models;
 using CryptoSimulator.ServiceModels.UserModels;
+using CryptoSimulator.ServiceModels.WalletModels;
 
 namespace CryptoSimulator.Common.Mappers
 {
@@ -9,6 +10,7 @@ namespace CryptoSimulator.Common.Mappers
         public UserMapper()
         {
             CreateMap<RegisterUser, User>();
+          
         }
     }
 }

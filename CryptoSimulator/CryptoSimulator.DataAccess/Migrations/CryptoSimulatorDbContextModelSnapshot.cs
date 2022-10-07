@@ -135,8 +135,8 @@ namespace CryptoSimulator.DataAccess.Migrations
                     b.Property<double>("Cash")
                         .HasColumnType("float");
 
-                    b.Property<double>("MaxCoins")
-                        .HasColumnType("float");
+                    b.Property<int>("MaxCoins")
+                        .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
