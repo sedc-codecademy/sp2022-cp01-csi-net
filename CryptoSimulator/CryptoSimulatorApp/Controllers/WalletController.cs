@@ -42,6 +42,7 @@ namespace CryptoSimulatorApp.Controllers
                 var transaction = _walletService.SellCoin(model);
                 if(transaction != 0)
                 {
+                   
                     return true;
                 }
                 return false;
@@ -83,6 +84,7 @@ namespace CryptoSimulatorApp.Controllers
                     return Ok(addCash);
 
                 }
+                
                 return Ok(addCash);
             }
             catch (Exception ex)
