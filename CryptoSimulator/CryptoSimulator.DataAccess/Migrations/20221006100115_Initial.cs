@@ -57,7 +57,7 @@ namespace CryptoSimulator.DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MaxCoins = table.Column<double>(type: "float", nullable: false),
+                    MaxCoins = table.Column<int>(type: "int", nullable: false),
                     Cash = table.Column<double>(type: "float", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },

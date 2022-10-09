@@ -1,11 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using CryptoSimulator.Services.Interfaces;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace CryptoSimulator.Services
 {
-    public class CoinService
+    public class CoinService : ICoinService
     {
-        public static double GetPriceByCoinId(string coinId)
+        public  double GetPriceByCoinId(string coinId)
         {
             var url = $"https://api.coingecko.com/api/v3/simple/price?ids={coinId}&vs_currencies=usd";
             HttpClient client = new HttpClient();

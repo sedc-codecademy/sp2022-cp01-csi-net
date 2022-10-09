@@ -1,3 +1,4 @@
+using CryptoSimulator.Common.Mappers;
 using CryptoSimulator.Common.Models;
 using CryptoSimulator.Configurations.DependencyInjection;
 using System.Text;
@@ -30,6 +31,8 @@ builder.Services
     .RegisterRepositories()
     .AddJwtTokenConfiguration(secret)
     .AddSwaggerConfiguration();
+
+
 
 var app = builder.Build();
 

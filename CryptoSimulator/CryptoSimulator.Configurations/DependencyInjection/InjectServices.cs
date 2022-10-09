@@ -10,6 +10,7 @@ namespace CryptoSimulator.Configurations.DependencyInjection
         {
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IWalletService, WalletService>();
+            services.AddTransient<ICoinService, CoinService>();
 
             return services;
         }

@@ -9,6 +9,7 @@ namespace CryptoSimulator.Common.Mappers
         public WalletMapper()
         {
             CreateMap<WalletDto, Wallet>();
+            CreateMap<Wallet, WalletDto>();
         }
     }
 }
