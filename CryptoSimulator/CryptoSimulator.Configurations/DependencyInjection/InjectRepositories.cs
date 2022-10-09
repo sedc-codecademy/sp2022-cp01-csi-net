@@ -10,6 +10,9 @@ namespace CryptoSimulator.Configurations.DependencyInjection
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IWalletRepository, WalletRepository>();
+            services.AddScoped<ICoinRepository, CoinRepository>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
+            
 
             return services;
         }

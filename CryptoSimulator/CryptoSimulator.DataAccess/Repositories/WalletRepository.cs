@@ -1,6 +1,8 @@
 ﻿using CryptoSimulator.DataAccess.Data;
 using CryptoSimulator.DataAccess.Repositories.Interfaces;
 using CryptoSimulator.DataModels.Models;
+using CryptoSimulator.ServiceModels.WalletModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace CryptoSimulator.DataAccess.Repositories
 {
@@ -20,13 +22,13 @@ namespace CryptoSimulator.DataAccess.Repositories
 
         public Wallet GetByUserId(int userId)
         {
-            var user = _context.Users.FirstOrDefault(x => x.Id == userId);
-            var wallet = new Wallet();
-            if (user != null)
+            var wallet = _context.Wallets.FirstOrDefault(x => x.UserId == userId);
+           
+            if (wallet != null)
             {
-                wallet = user.Wallet;
+                return wallet;
             }
-            return wallet ;
+           return wallet = new Wallet();
         }
 
         public List<string> GetCoinIDsList()
@@ -53,6 +55,29 @@ namespace CryptoSimulator.DataAccess.Repositories
 
         }
 
+        public void UpdateWallet(Wallet wallet,User user)
+        {
+            
+            _context.Entry(user).State = EntityState.Detached;
+            _context.Wallets.Update(wallet);
+            _context.SaveChanges();
+           
+        }
 
+        public void Detach(Wallet entity)
+        {
+           
+          
+        }
+
+        public int CoinsLimit(int userId)
+        {
+            var coinsLimit = _context.Wallets.FirstOrDefault(x => x.UserId == userId);
+            if(coinsLimit != null)
+            {
+                return coinsLimit.MaxCoins;
+            }
+            return -1;
+        }
     }
 }
