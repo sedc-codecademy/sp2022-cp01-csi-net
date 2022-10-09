@@ -42,7 +42,6 @@ namespace CryptoSimulator.Services
 
         public double SellCoin(BuySellCoinModel model)
         {
-            // TODO: consider updating coin data here, and maybe add notification is changes
             try
             {
                 var wallet = GetByUserId(model.UserId);
@@ -65,6 +64,7 @@ namespace CryptoSimulator.Services
                     coin.Quantity -= model.Amount;
                     wallet.Cash += transaction.TotalPrice;
                     user.Transactions.Add(transaction);
+                    // This value should show up in the top right corner of the wallet each time a coin is bought or sold
                     return CalculateYield(model);
                 }
                 return 0;
@@ -80,7 +80,6 @@ namespace CryptoSimulator.Services
         {
             try
             {
-                // TODO: consider updating coin data here, and maybe add notification if changes
                 var user = _userRepository.GetById(model.UserId);
                 var wallet = GetByUserId(model.UserId);
                 // Get the current price of the coin from coingecko api
@@ -93,11 +92,9 @@ namespace CryptoSimulator.Services
                     PriceBought = coinPrice,
                     Quantity = model.Amount,
                     WalletId = wallet.Id,
-
                 };
                 wallet.Coins.Add(coin);
                 
-
                 var userCoin = _userRepository.GetById(model.UserId);
                 var transaction = new Transaction
                 {
@@ -111,7 +108,6 @@ namespace CryptoSimulator.Services
                     User = userCoin
                 };
                 
- 
                 var isCoinMaxPassed = IsCoinLimitReached(wallet.Id);
 
                 if (!isCoinMaxPassed && wallet.Cash >= transaction.TotalPrice && wallet.UserId != null)
@@ -122,30 +118,17 @@ namespace CryptoSimulator.Services
                     wallet.MaxCoins -= coin.Quantity;
                     var convertWallet = _mapper.Map<Wallet>(wallet);
                     _walletRepository.UpdateWallet(convertWallet, user);
+                    // This value should show up in the top right corner of the wallet each time a coin is bought or sold
                     return CalculateYield(model);
-
                 }
-                          
                     return 0;
-               
             }
             catch(Exception ex)
             {
                 _logger.LogError(ex.Message.ToString());
                 throw new Exception(ex.Message);
-
             }
-        }
-        /// <summary>
-        /// Calculates the total yield of the portfolio after a transaction (buy or sell) is made
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="coinId"></param>
-        /// <param name="amount">Amount of coins to buy. Should be negative value if buying (user loses cash when buying), positive if selling (user gains cash when selling)</param>
-        /// <returns></returns>
-        // https://api.coingecko.com/api/v3/simple/price?ids={comma-separated coins list}&vs_currencies=usd //api for getting the current price of the coins in the wallet
-
-        
+        }        
 
         public double AddCash(int userId, double amount)
         {
@@ -202,16 +185,20 @@ namespace CryptoSimulator.Services
         }
 
         #region private 
+
+        /// <summary>
+        /// Calculates the total yield of the portfolio after a transaction (buy or sell) is made
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="coinId"></param>
+        /// <param name="amount">Amount of coins to buy. Should be negative value if buying (user loses cash when buying), positive if selling (user gains cash when selling)</param>
+        /// <returns></returns>
         private double CalculateYield(BuySellCoinModel model)
         {
             List<double> yields = new List<double>();
-
             var user = _userRepository.GetById(model.UserId);
-
             var userWallet = _walletRepository.GetByUserId(user.Id);
-
             var coins = _coinRepository.GetAllCoinsInWallet(userWallet.Id);
-
 
             if (user != null && userWallet.UserId != null && coins.Count >0 ) {
                 var coinPrice = _coinService.GetPriceByCoinId(model.CoinId);
@@ -233,11 +220,6 @@ namespace CryptoSimulator.Services
                 return result;
             }
             return 0;
-        }
-
-        double IWalletService.CalculateYield(BuySellCoinModel model)
-        {
-            throw new NotImplementedException();
         }
         #endregion
     }
