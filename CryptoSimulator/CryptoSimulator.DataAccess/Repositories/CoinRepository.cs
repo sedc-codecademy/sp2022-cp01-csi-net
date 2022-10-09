@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CryptoSimulator.DataAccess.Repositories
 {
-    public class CoinRepository : BaseRepository , ICoinRepository
+    public class CoinRepository : BaseRepository, ICoinRepository
     {
         public CoinRepository(CryptoSimulatorDbContext context) : base(context)
         {
@@ -18,14 +18,14 @@ namespace CryptoSimulator.DataAccess.Repositories
 
         public List<Coin> GetAllCoinsInWallet(int walletId)
         {
-            var coinList = new List<Coin>();
-            
-               var ifCoinListExists = _context.Coins.Where(x => x.WalletId == walletId).ToList();
-              if(ifCoinListExists != null || ifCoinListExists.Count > 0)
-                {
-                    return ifCoinListExists;
-                }
-            return coinList;
+            try
+            {
+                return _context.Coins.Where(x => x.WalletId == walletId).ToList();
+            }
+            catch (Exception)
+            {
+                return new List<Coin>();
+            }
         }
 
         public Coin GetById(int id)
