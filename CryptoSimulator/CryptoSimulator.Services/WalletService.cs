@@ -46,26 +46,72 @@ namespace CryptoSimulator.Services
             try
             {
                 var wallet = GetByUserId(model.UserId);
-                var coin = _coinRepository.GetById(wallet.Id);
-                if (coin != null)
+                var user = _userRepository.GetById(model.UserId);
+                var coin = _coinRepository.GetCoin(wallet.Id,model.Name);
+                var coinsWithSameName = _coinRepository.GetAllCoinsInWallet(wallet.Id, model.Name);
+                var amountOfCoinsWithSameName = AmountOfCoinsWithSameNameInWallet(coinsWithSameName);
+                var priceBoughtOfCoins = PriceBoughtOfCoins(coinsWithSameName);
+                var coinPrice = _coinService.GetPriceByCoinId(model.CoinId);
+                if (model.Amount > amountOfCoinsWithSameName)
                 {
-                    var user = _userRepository.GetById(model.UserId);
-                    var transaction = new Transaction
+                    return 0;
+                }
+                else if(model.Amount == amountOfCoinsWithSameName)
+                {
+                    if (coin != null)
                     {
-                        BuyOrSell = false,
-                        TotalPrice = model.Amount * coin.PriceBought,
-                        CoinName = coin.Name,
-                        DateCreated = DateTime.Now,
-                        Price = coin.PriceBought,
-                        Quantity = model.Amount,
-                        UserId = model.UserId,
-                        User = user
-                    };
-                    _transactionRepository.Insert(transaction);
-                    coin.Quantity -= model.Amount;
-                    wallet.Cash += transaction.TotalPrice;
-                    user.Transactions.Add(transaction);
-                    return CalculateYield(model);
+
+                        var transaction = new Transaction
+                        {
+                            BuyOrSell = false,
+                            TotalPrice = model.Amount * coinPrice,
+                            CoinName = coin.Name,
+                            DateCreated = DateTime.Now,
+                            Price = coinPrice,
+                            Quantity = model.Amount,
+                            UserId = model.UserId,
+                            User = user
+                        };
+                        _transactionRepository.Insert(transaction);
+                        DeleteAllCoinsFromUser(coinsWithSameName);
+                        wallet.Cash += transaction.TotalPrice;
+                        wallet.MaxCoins += transaction.Quantity;
+                        var convertWallet = _mapper.Map<Wallet>(wallet);
+                        _walletRepository.UpdateWallet(convertWallet, user);
+                        user.Transactions.Add(transaction);
+                        return CalculateYield(model);
+                    }
+                }
+                else if(model.Amount < amountOfCoinsWithSameName)
+                {
+                    if (coin != null)
+                    {
+                        
+                        while (model.Amount > 0)
+                        {
+                            
+                            var transaction = new Transaction
+                            {
+                                BuyOrSell = false,
+                                TotalPrice = model.Amount * coinPrice,
+                                CoinName = coin.Name,
+                                DateCreated = DateTime.Now,
+                                Price = coinPrice,
+                                Quantity = model.Amount,
+                                UserId = model.UserId,
+                                User = user
+                            };
+                            _transactionRepository.Insert(transaction);
+                            DeleteAllNeededCoins(coinsWithSameName, model.Amount);
+                            wallet.Cash += transaction.TotalPrice;
+                            wallet.MaxCoins += transaction.Quantity;
+                            var convertWallet = _mapper.Map<Wallet>(wallet);
+                            _walletRepository.UpdateWallet(convertWallet, user);
+                            user.Transactions.Add(transaction);
+                            return CalculateYield(model);
+                        }
+
+                    }
                 }
                 return 0;
             }
@@ -151,14 +197,18 @@ namespace CryptoSimulator.Services
         {
             try
             {
-                var wallet = GetByUserId(userId);
-                var walletUser = _userRepository.GetById(wallet.UserId);
-               
-                wallet.Cash += amount;
-                var convertWallet = _mapper.Map<Wallet>(wallet);
-             
-                _walletRepository.UpdateWallet(convertWallet,walletUser);
-                return wallet.Cash;
+                if (amount > 0)
+                {
+                    var wallet = GetByUserId(userId);
+                    var walletUser = _userRepository.GetById(wallet.UserId);
+
+                    wallet.Cash += amount;
+                    var convertWallet = _mapper.Map<Wallet>(wallet);
+
+                    _walletRepository.UpdateWallet(convertWallet, walletUser);
+                    return wallet.Cash;
+                }
+                return 0;
             }
             catch(Exception ex)
             {
@@ -172,11 +222,14 @@ namespace CryptoSimulator.Services
         {
             try
             {
-                var wallet = _walletRepository.GetById(userId);
-                var walletUser = _userRepository.GetById(wallet.UserId);
-                wallet.MaxCoins = limit;
-                var convertWallet = _mapper.Map<Wallet>(wallet);
-                _walletRepository.UpdateWallet(convertWallet, walletUser);
+                if (limit > 0)
+                {
+                    var wallet = _walletRepository.GetById(userId);
+                    var walletUser = _userRepository.GetById(wallet.UserId);
+                    wallet.MaxCoins = limit;
+                    var convertWallet = _mapper.Map<Wallet>(wallet);
+                    _walletRepository.UpdateWallet(convertWallet, walletUser);
+                }
             }
             catch(Exception ex) {
                 throw new Exception(ex.Message);
@@ -210,7 +263,7 @@ namespace CryptoSimulator.Services
 
             var userWallet = _walletRepository.GetByUserId(user.Id);
 
-            var coins = _coinRepository.GetAllCoinsInWallet(userWallet.Id);
+            var coins = _coinRepository.GetAllCoinsInWallet(userWallet.Id,model.Name);
 
 
             if (user != null && userWallet.UserId != null && coins.Count >0 ) {
@@ -221,9 +274,9 @@ namespace CryptoSimulator.Services
                 foreach (var coin in coins)
                 {
                     var yield = 0.0;
-                    var allUserTransactions = _transactionRepository.GetAllUserTransactions(user.Id);
-                    var transactions = allUserTransactions.Where(x => x.CoinName == coin.Name);
-                    foreach (var transaction in transactions)
+                    var allUserTransactions = _transactionRepository.GetAllUserTransactionsCoinName(user.Id, coin.Name);
+                   
+                    foreach (var transaction in allUserTransactions)
                     {
                         yield += transaction.BuyOrSell ? -transaction.TotalPrice : transaction.TotalPrice;
                     }
@@ -233,6 +286,61 @@ namespace CryptoSimulator.Services
                 return result;
             }
             return 0;
+        }
+        private double AmountOfCoinsWithSameNameInWallet(List<Coin> listOfCoins)
+        {
+            double amoutOfCoins = 0;
+
+            foreach(var coin in listOfCoins)
+            {
+                amoutOfCoins += coin.Quantity;
+            }
+            return amoutOfCoins;
+        }
+        private double PriceBoughtOfCoins(List<Coin> listOfCoins)
+        {
+            double priceBought = 0;
+
+            foreach (var coin in listOfCoins)
+            {
+                priceBought += coin.PriceBought;              
+            }
+            return priceBought / listOfCoins.Count();
+        }
+
+        private void DeleteAllCoinsFromUser(List<Coin> listOfCoins)
+        {
+            foreach(var coin in listOfCoins)
+            {
+                _coinRepository.DeleteCoin(coin);
+            }
+        }
+
+        private void DeleteAllNeededCoins(List<Coin> listOfcoins, double amoutOfCoins)
+        {
+            var i = 0;
+            while (amoutOfCoins > 0)
+            {
+                
+
+
+                if (amoutOfCoins >= listOfcoins[i].Quantity)
+                {
+                    _coinRepository.DeleteCoin(listOfcoins[i]);
+                    amoutOfCoins -= listOfcoins[i].Quantity;
+                    //    listOfcoins.Remove(coin);
+
+                }
+                else
+                {
+                    listOfcoins[i].Quantity -= amoutOfCoins;
+                    _coinRepository.UpdateCoin(listOfcoins[i]);
+                    amoutOfCoins = 0;
+
+                }              
+                i++;
+
+            }
         }
 
         double IWalletService.CalculateYield(BuySellCoinModel model)
