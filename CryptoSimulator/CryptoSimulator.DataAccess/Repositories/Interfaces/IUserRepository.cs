@@ -6,7 +6,5 @@ namespace CryptoSimulator.DataAccess.Repositories.Interfaces
     {
         User GetUserByUsername(string username);
         int Insert(User entity);
-
-        
     }
 }
