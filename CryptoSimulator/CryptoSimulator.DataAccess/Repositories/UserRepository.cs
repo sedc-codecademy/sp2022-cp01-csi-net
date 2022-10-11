@@ -11,6 +11,8 @@ namespace CryptoSimulator.DataAccess.Repositories
         {
         }
 
+       
+
         public User GetById(int id)
         {
             return _context.Users.SingleOrDefault(x => x.Id == id);

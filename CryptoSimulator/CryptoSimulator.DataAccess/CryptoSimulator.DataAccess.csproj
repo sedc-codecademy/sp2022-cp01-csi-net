@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CryptoSimulator.DataModels\CryptoSimulator.DataModels.csproj" />
+    <ProjectReference Include="..\CryptoSimulator.ServiceModels\CryptoSimulator.ServiceModels.csproj" />
   </ItemGroup>
 
 </Project>
