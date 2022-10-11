@@ -11,8 +11,11 @@ namespace CryptoSimulator.DataAccess.Repositories.Interfaces
     {
         public Coin GetById(int id);
         public int Insert(Coin entity);
+        public void UpdateCoin(Coin entity);
+        public Coin GetCoin(int walletId,string coinName);
+        public List<Coin> GetAllCoinsInWallet(int walletId,string coinName);
 
-        public List<Coin> GetAllCoinsInWallet(int walletId);
+        public int DeleteCoin(Coin coin);
         
     }
 }

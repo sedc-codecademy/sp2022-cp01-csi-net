@@ -28,6 +28,18 @@ namespace CryptoSimulator.DataAccess.Repositories
                 return transactionList;
         }
 
+        public List<Transaction> GetAllUserTransactionsCoinName(int userId, string coinName)
+        {
+            var transactionList = new List<Transaction>();
+
+            var transactionListExists = _context.UserTransactions.Where(x => x.UserId == userId && x.CoinName == coinName);
+            if (transactionList != null)
+            {
+                return transactionListExists.ToList();
+            }
+            return transactionList;
+        }
+
         public Transaction GetById(int id)
         {
             return _context.UserTransactions.SingleOrDefault(x => x.Id == id);
