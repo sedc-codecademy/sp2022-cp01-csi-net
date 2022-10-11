@@ -219,6 +219,20 @@ namespace CryptoSimulator.Services
                 throw new Exception(ex.Message);
             }
         }
+
+        public IEnumerable<Transaction> GetUsersTransactions(int userId)
+        {
+            try
+            {
+                var transactions = _transactionRepository.GetAllUserTransactions(userId);
+                return transactions;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         #region private 
 
         /// <summary>
@@ -309,9 +323,6 @@ namespace CryptoSimulator.Services
                 i++;
             }
         }
-
-
-
         #endregion
     }
 }

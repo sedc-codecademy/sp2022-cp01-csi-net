@@ -104,5 +104,19 @@ namespace CryptoSimulatorApp.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
+        [HttpGet("transactions")]
+        public IActionResult GetUserTransactions(int userId)
+        {
+            try
+            {
+                var transactions = _walletService.GetUsersTransactions(userId);
+                return Ok(transactions);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
     }
 }
