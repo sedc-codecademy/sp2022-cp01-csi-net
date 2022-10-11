@@ -71,10 +71,24 @@ namespace CryptoSimulatorApp.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
+        [HttpGet("user-cash")]
+        public IActionResult ShowCash(int userId)
+        {
+            try
+            {
+                var userCash = _walletService.GetUserCash(userId);
+                return Ok(userCash);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         [HttpPost]
-        [AllowAnonymous]
-        [Route("AddCash")]
-        public IActionResult AddCash(int userId,double amount)
+        [Route("add-cash")]
+        public IActionResult AddCash(int userId, double amount)
         {
             try
             {
@@ -82,30 +96,33 @@ namespace CryptoSimulatorApp.Controllers
                 if(addCash != 0)
                 {
                     return Ok(addCash);
-
                 }
-                
-                return Ok(addCash);
+                else
+                {
+                    throw new Exception("Please enter a value");
+                }
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+
         [HttpPost]
-        [AllowAnonymous]
-        [Route("SetCashToMax")]
-        public void SetCashToMax(int userId, int limit)
+        [Route("set-coin-limit")]
+        public IActionResult SetCashToMax(int userId, int limit)
         {
             try
             {
-                _walletService.SetMaxCoinLimit(userId,limit);
+                var result = _walletService.SetMaxCoinLimit(userId,limit);
+                return Ok(result);
             }
             catch(Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+
         [HttpGet]
         [AllowAnonymous]
         [Route("IsLimitReached")]

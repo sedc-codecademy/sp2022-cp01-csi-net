@@ -8,5 +8,10 @@ namespace CryptoSimulator.DataModels.Models
         public int UserId { get; set; }
         public User User { get; set; }
         public ICollection<Coin> Coins { get; set; }
+
+        public Wallet()
+        {
+            Coins = new List<Coin>();
+        }
     }
 }
