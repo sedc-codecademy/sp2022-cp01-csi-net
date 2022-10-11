@@ -1,7 +1,9 @@
-﻿using CryptoSimulator.ServiceModels.WalletModels;
+﻿using CryptoSimulator.DataModels.Models;
+using CryptoSimulator.ServiceModels.WalletModels;
 using CryptoSimulator.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace CryptoSimulatorApp.Controllers
 {
@@ -15,25 +17,63 @@ namespace CryptoSimulatorApp.Controllers
             _logger = logger;
         }
 
-       
-        [HttpPost]
-        //[AllowAnonymous]
-        [Route("SellCoin")]
-        public bool SellCoin(BuySellCoinModel model)
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("GetCoins")]
+        public IActionResult GetWalletCoins(int userId)
         {
             try
             {
-                var transaction = _walletService.SellCoin(model);
-                if (transaction != 0)
+                var wallet = _walletService.GetByUserId(userId);
+                var rsp = new Dictionary<string, List<CoinDto>>();
+                rsp.Add("coins", wallet.Coins.Select(x=>new CoinDto
                 {
-
-                    return true;
-                }
-                return false;
+                    CoinId = x.CoinId,
+                    Name = x.Name,
+                    PriceBought = x.PriceBought,
+                    Quantity = x.Quantity,
+                    WalletId = x.WalletId,
+                }).ToList());
+                //var result = JsonConvert.SerializeObject(rsp);
+                //var jsoned = JsonConvert.DeserializeObject(result);
+                return Ok(rsp);
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("CalculateYield")]
+        public IActionResult CalculateYield(BuySellCoinModel model)
+        {
+            try
+            {
+                var result = _walletService.CalculateYield(model);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("SellCoin")]
+        public IActionResult SellCoin(BuySellCoinModel model)
+        {
+            try
+            {
+                //model.UserId = UserId;
+                var sellTransaction = _walletService.SellCoin(model);
+                return Ok(sellTransaction);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 
