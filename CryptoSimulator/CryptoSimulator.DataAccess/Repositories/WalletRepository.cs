@@ -1,8 +1,6 @@
 ﻿using CryptoSimulator.DataAccess.Data;
 using CryptoSimulator.DataAccess.Repositories.Interfaces;
 using CryptoSimulator.DataModels.Models;
-using CryptoSimulator.ServiceModels.WalletModels;
-using Microsoft.EntityFrameworkCore;
 
 namespace CryptoSimulator.DataAccess.Repositories
 {
@@ -22,13 +20,20 @@ namespace CryptoSimulator.DataAccess.Repositories
 
         public Wallet GetByUserId(int userId)
         {
-            var wallet = _context.Wallets.FirstOrDefault(x => x.UserId == userId);
-           
-            if (wallet != null)
+            var user = _context.Users.FirstOrDefault(x => x.Id == userId);
+            var wallet = new Wallet();
+            if (user != null)
             {
-                return wallet;
+                wallet = user.Wallet;
             }
-           return wallet = new Wallet();
+            return wallet ;
+        }
+
+        public List<string> GetCoinIDsList()
+        {
+            var coinIdsList = new List<string>();
+            // Here we should get list of the coingecko ids of all the coins we have in the wallet so that we can send a new request to get the current price 
+            return coinIdsList;
         }
 
         // We may not need this method
@@ -48,29 +53,6 @@ namespace CryptoSimulator.DataAccess.Repositories
 
         }
 
-        public void UpdateWallet(Wallet wallet,User user)
-        {
-            
-            _context.Entry(user).State = EntityState.Detached;
-            _context.Wallets.Update(wallet);
-            _context.SaveChanges();
-           
-        }
 
-        public void Detach(Wallet entity)
-        {
-           
-          
-        }
-
-        public int CoinsLimit(int userId)
-        {
-            var coinsLimit = _context.Wallets.FirstOrDefault(x => x.UserId == userId);
-            if(coinsLimit != null)
-            {
-                return coinsLimit.MaxCoins;
-            }
-            return -1;
-        }
     }
 }
