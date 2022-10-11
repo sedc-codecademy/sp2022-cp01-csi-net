@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CryptoSimulator.DataAccess.Repositories
 {
-    public class CoinRepository : BaseRepository , ICoinRepository
+    public class CoinRepository : BaseRepository, ICoinRepository
     {
         public CoinRepository(CryptoSimulatorDbContext context) : base(context)
         {

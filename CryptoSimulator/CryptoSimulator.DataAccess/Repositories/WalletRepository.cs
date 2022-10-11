@@ -31,13 +31,6 @@ namespace CryptoSimulator.DataAccess.Repositories
            return wallet = new Wallet();
         }
 
-        public List<string> GetCoinIDsList()
-        {
-            var coinIdsList = new List<string>();
-            // Here we should get list of the coingecko ids of all the coins we have in the wallet so that we can send a new request to get the current price 
-            return coinIdsList;
-        }
-
         // We may not need this method
 
         //public IEnumerable<Coin> GetAllCoins(int walletId)
