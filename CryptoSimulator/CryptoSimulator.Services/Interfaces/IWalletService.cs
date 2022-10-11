@@ -9,6 +9,7 @@ namespace CryptoSimulator.Services.Interfaces
         public double BuyCoin(BuySellCoinModel model);
         public double CalculateYield(BuySellCoinModel model);
         public double AddCash(int userId, double amount);
-        public void SetMaxCoinLimit(int userId, int limit);
+        public bool SetMaxCoinLimit(int userId, int limit);
+        public double GetUserCash(int userId);
     }
 }

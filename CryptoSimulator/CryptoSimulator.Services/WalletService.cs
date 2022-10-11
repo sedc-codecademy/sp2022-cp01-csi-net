@@ -42,6 +42,12 @@ namespace CryptoSimulator.Services
             return _mapper.Map<WalletDto>(wallet);
         }
 
+        public double GetUserCash(int userId)
+        {
+            var wallet = GetByUserId(userId);
+            return wallet.Cash;
+        }
+
         public double SellCoin(BuySellCoinModel model)
         {
             try
@@ -115,7 +121,6 @@ namespace CryptoSimulator.Services
                 throw new Exception(ex.Message);
             }
         }
-
 
         public double BuyCoin(BuySellCoinModel model)
         {
@@ -192,25 +197,28 @@ namespace CryptoSimulator.Services
             }
         }
 
-        public void SetMaxCoinLimit(int userId, int limit)
+        // TODO ADD NEW MIGRAITON  ===> CHANGED MAXCOIN TO INT
+        public bool SetMaxCoinLimit(int userId, int limit)
         {
             try
             {
-                if (limit > 0)
+                var wallet = _walletRepository.GetById(userId);
+                var walletUser = _userRepository.GetById(wallet.UserId);
+
+                if (limit >= 0 && limit >= wallet.Coins.Count)
                 {
-                    var wallet = _walletRepository.GetById(userId);
-                    var walletUser = _userRepository.GetById(wallet.UserId);
                     wallet.MaxCoins = limit;
                     var convertWallet = _mapper.Map<Wallet>(wallet);
                     _walletRepository.UpdateWallet(convertWallet, walletUser);
+                    return true;
                 }
+                return false;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
-
         #region private 
 
         /// <summary>
@@ -262,6 +270,7 @@ namespace CryptoSimulator.Services
             }
             return amoutOfCoins;
         }
+
         private double PriceBoughtOfCoins(List<Coin> listOfCoins)
         {
             double priceBought = 0;
@@ -300,6 +309,8 @@ namespace CryptoSimulator.Services
                 i++;
             }
         }
+
+
 
         #endregion
     }
