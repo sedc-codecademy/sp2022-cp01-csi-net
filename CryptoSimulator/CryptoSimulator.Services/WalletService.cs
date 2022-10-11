@@ -219,24 +219,6 @@ namespace CryptoSimulator.Services
                 throw new Exception(ex.Message);
             }
         }
-
-        public bool IsCoinLimitReached(int userId)
-        {
-            try
-            {
-                var coinLimit = _walletRepository.CoinsLimit(userId);
-                if (coinLimit >= 0)
-                {
-                    return false;
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
         #region private 
 
         /// <summary>

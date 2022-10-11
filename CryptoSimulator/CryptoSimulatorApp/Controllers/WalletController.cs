@@ -104,23 +104,5 @@ namespace CryptoSimulatorApp.Controllers
                 throw new Exception(ex.Message);
             }
         }
-
-        [HttpGet]
-        [AllowAnonymous]
-        [Route("IsLimitReached")]
-        public IActionResult IsCoinLimitReached(int walletId)
-        {
-            try
-            {
-                var isCoinLimitReached = _walletService.IsCoinLimitReached(walletId);
-                return Ok(isCoinLimitReached);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-
     }
 }
