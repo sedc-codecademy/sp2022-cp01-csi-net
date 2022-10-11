@@ -2,7 +2,6 @@
 using CryptoSimulator.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.RegularExpressions;
 
 namespace CryptoSimulatorApp.Controllers
 {
@@ -10,58 +9,24 @@ namespace CryptoSimulatorApp.Controllers
     {
         IWalletService _walletService;
         ILogger _logger;
-        public WalletController(IWalletService walletService,ILogger<WalletController> logger)
+        public WalletController(IWalletService walletService, ILogger<WalletController> logger)
         {
             _walletService = walletService;
             _logger = logger;
         }
 
-
-        [HttpGet]
-        [AllowAnonymous]
-        [Route("User")]
-        public IActionResult GetUserById(int id)
-        {
-            var user = _walletService.GetByUserId(id);
-            if(user.Cash == 0)
-            {
-                return NotFound();
-            }
-            return Ok(user);
-
-        }
-
+       
         [HttpPost]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         [Route("SellCoin")]
         public bool SellCoin(BuySellCoinModel model)
         {
-            
             try
             {
                 var transaction = _walletService.SellCoin(model);
-                if(transaction != 0)
+                if (transaction != 0)
                 {
-                   
-                    return true;
-                }
-                return false;
-            }
-            catch(Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-        [HttpPost]
-        [AllowAnonymous]
-        [Route("BuyCoin")]
-        public bool BuyCoin (BuySellCoinModel model)
-        {
-            try
-            {
-                var buyTransaction = _walletService.BuyCoin(model);
-                if(buyTransaction != 0)
-                {
+
                     return true;
                 }
                 return false;
@@ -71,20 +36,38 @@ namespace CryptoSimulatorApp.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
         [HttpPost]
         [AllowAnonymous]
+        [Route("BuyCoin")]
+        public IActionResult BuyCoin(BuySellCoinModel model)
+        {
+            try
+            {
+                //model.UserId = UserId;
+                var buyTransaction = _walletService.BuyCoin(model);
+                return Ok(buyTransaction);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        //[AllowAnonymous]
         [Route("AddCash")]
-        public IActionResult AddCash(int userId,double amount)
+        public IActionResult AddCash(int userId, double amount)
         {
             try
             {
                 var addCash = _walletService.AddCash(userId, amount);
-                if(addCash != 0)
+                if (addCash != 0)
                 {
                     return Ok(addCash);
-
+                    // huh?
                 }
-                
+
                 return Ok(addCash);
             }
             catch (Exception ex)
@@ -92,29 +75,15 @@ namespace CryptoSimulatorApp.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
         [HttpPost]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         [Route("SetCashToMax")]
         public void SetCashToMax(int userId, int limit)
         {
             try
             {
-                _walletService.SetMaxCoinLimit(userId,limit);
-            }
-            catch(Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-        [HttpGet]
-        [AllowAnonymous]
-        [Route("IsLimitReached")]
-        public IActionResult IsCoinLimitReached(int walletId)
-        {
-            try
-            {
-                var isCoinLimitReached = _walletService.IsCoinLimitReached(walletId);
-                return Ok(isCoinLimitReached);
+                _walletService.SetMaxCoinLimit(userId, limit);
             }
             catch (Exception ex)
             {
