@@ -15,19 +15,7 @@ namespace CryptoSimulatorApp.Controllers
             _logger = logger;
         }
 
-        //[HttpGet]
-        //[AllowAnonymous]
-        //[Route("User")]
-        //public IActionResult GetUserById(int id)
-        //{
-        //    var user = _walletService.GetByUserId(id);
-        //    if(user.Cash == 0)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return Ok(user);
-        //}
-
+       
         [HttpPost]
         //[AllowAnonymous]
         [Route("SellCoin")]
