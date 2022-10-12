@@ -1,8 +1,9 @@
-﻿using CryptoSimulator.ServiceModels.WalletModels;
+﻿using CryptoSimulator.DataModels.Models;
+using CryptoSimulator.ServiceModels.WalletModels;
 using CryptoSimulator.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace CryptoSimulatorApp.Controllers
 {
@@ -10,118 +11,152 @@ namespace CryptoSimulatorApp.Controllers
     {
         IWalletService _walletService;
         ILogger _logger;
-        public WalletController(IWalletService walletService,ILogger<WalletController> logger)
+        public WalletController(IWalletService walletService, ILogger<WalletController> logger)
         {
             _walletService = walletService;
             _logger = logger;
         }
 
-
         [HttpGet]
         [AllowAnonymous]
-        [Route("User")]
-        public IActionResult GetUserById(int id)
+        [Route("GetCoins")]
+        public IActionResult GetWalletCoins(int userId)
         {
-            var user = _walletService.GetByUserId(id);
-            if(user.Cash == 0)
+            try
             {
-                return NotFound();
+                var wallet = _walletService.GetByUserId(userId);
+                var rsp = new Dictionary<string, List<CoinDto>>();
+                rsp.Add("coins", wallet.Coins.Select(x=>new CoinDto
+                {
+                    CoinId = x.CoinId,
+                    Name = x.Name,
+                    PriceBought = x.PriceBought,
+                    Quantity = x.Quantity,
+                    WalletId = x.WalletId,
+                }).ToList());
+                //var result = JsonConvert.SerializeObject(rsp);
+                //var jsoned = JsonConvert.DeserializeObject(result);
+                return Ok(rsp);
             }
-            return Ok(user);
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("CalculateYield")]
+        public IActionResult CalculateYield(BuySellCoinModel model)
+        {
+            try
+            {
+                var result = _walletService.CalculateYield(model);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]
         [AllowAnonymous]
         [Route("SellCoin")]
-        public bool SellCoin(BuySellCoinModel model)
+        public IActionResult SellCoin(BuySellCoinModel model)
         {
-            
             try
             {
-                var transaction = _walletService.SellCoin(model);
-                if(transaction != 0)
-                {
-                   
-                    return true;
-                }
-                return false;
+                //model.UserId = UserId;
+                var sellTransaction = _walletService.SellCoin(model);
+                return Ok(sellTransaction);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
+
         [HttpPost]
         [AllowAnonymous]
         [Route("BuyCoin")]
-        public bool BuyCoin (BuySellCoinModel model)
+        public IActionResult BuyCoin(BuySellCoinModel model)
         {
             try
             {
+                //model.UserId = UserId;
                 var buyTransaction = _walletService.BuyCoin(model);
-                if(buyTransaction != 0)
-                {
-                    return true;
-                }
-                return false;
+                return Ok(buyTransaction);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("user-cash")]
+        public IActionResult ShowCash(int userId)
+        {
+            try
+            {
+                var userCash = _walletService.GetUserCash(userId);
+                return Ok(userCash);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+
         [HttpPost]
-        [AllowAnonymous]
-        [Route("AddCash")]
-        public IActionResult AddCash(int userId,double amount)
+        [Route("add-cash")]
+        public IActionResult AddCash(int userId, double amount)
         {
             try
             {
                 var addCash = _walletService.AddCash(userId, amount);
-                if(addCash != 0)
+                if (addCash != 0)
                 {
                     return Ok(addCash);
-
                 }
-                
-                return Ok(addCash);
+                else
+                {
+                    throw new Exception("Please enter a value");
+                }
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+
         [HttpPost]
-        [AllowAnonymous]
-        [Route("SetCashToMax")]
-        public void SetCashToMax(int userId, int limit)
+        [Route("set-coin-limit")]
+        public IActionResult SetCashToMax(int userId, int limit)
         {
             try
             {
-                _walletService.SetMaxCoinLimit(userId,limit);
+                var result = _walletService.SetMaxCoinLimit(userId,limit);
+                return Ok(result);
             }
             catch(Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
-        [HttpGet]
-        [AllowAnonymous]
-        [Route("IsLimitReached")]
-        public IActionResult IsCoinLimitReached(int walletId)
+
+        [HttpGet("transactions")]
+        public IActionResult GetUserTransactions(int userId)
         {
             try
             {
-                var isCoinLimitReached = _walletService.IsCoinLimitReached(walletId);
-                return Ok(isCoinLimitReached);
+                var transactions = _walletService.GetUsersTransactions(userId);
+                return Ok(transactions);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception(ex.Message);
+                return BadRequest();
             }
         }
-
-
     }
 }

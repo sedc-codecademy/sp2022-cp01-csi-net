@@ -10,22 +10,15 @@ using System.Threading.Tasks;
 
 namespace CryptoSimulator.DataAccess.Repositories
 {
-    public class TransactionRepository : BaseRepository , ITransactionRepository
+    public class TransactionRepository : BaseRepository, ITransactionRepository
     {
         public TransactionRepository(CryptoSimulatorDbContext context) : base(context)
         {
         }
 
-        public List<Transaction> GetAllUserTransactions(int userId)
+        public IEnumerable<Transaction> GetAllUserTransactions(int userId)
         {
-            var transactionList = new List<Transaction>();
-
-               var transactionListExists = _context.UserTransactions.Where(x => x.UserId == userId);
-                if (transactionList != null )
-                {
-                    return transactionListExists.ToList();
-                }
-                return transactionList;
+            return _context.UserTransactions.Where(x => x.UserId == userId);      
         }
 
         public List<Transaction> GetAllUserTransactionsCoinName(int userId, string coinName)
@@ -45,13 +38,13 @@ namespace CryptoSimulator.DataAccess.Repositories
             return _context.UserTransactions.SingleOrDefault(x => x.Id == id);
         }
 
-        
+
         public void Insert(Transaction entity)
         {
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.UserTransactions ON;");
             _context.UserTransactions.Add(entity);
             _context.SaveChanges();
-            
+
         }
     }
 }
