@@ -54,5 +54,14 @@ namespace CryptoSimulator.DataAccess.Repositories
 
         }
 
+        public Wallet GetWalletOnly(int userId)
+        {
+            var wallet = _context.Wallets.FirstOrDefault(x => x.UserId == userId);
+            if(wallet != null)
+            {
+                return wallet;
+            }
+            return new Wallet();
+        }
     }
 }

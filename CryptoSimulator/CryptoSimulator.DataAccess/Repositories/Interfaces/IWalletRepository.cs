@@ -11,6 +11,8 @@ namespace CryptoSimulator.DataAccess.Repositories.Interfaces
 
         void Detach(Wallet entity);
 
+        public Wallet GetWalletOnly(int userId);
+
         //public int CoinsLimit(int userId);
 
         //IEnumerable<Coin> GetAllCoins(int walletId);
