@@ -46,8 +46,9 @@ namespace CryptoSimulator.Services
             try
             {
 
-                var wallet = GetByUserId(model.UserId);
+               
                 var user = _userRepository.GetById(model.UserId);
+                var wallet = _walletRepository.GetOnlyWallet(user.Id);
                 var coin = _coinRepository.GetCoin(wallet.Id, model.Name);
                 var coinsWithSameName = _coinRepository.GetAllCoinsInWallet(wallet.Id, model.Name);
                 var amountOfCoinsWithSameName = AmountOfCoinsWithSameNameInWallet(coinsWithSameName);
@@ -75,7 +76,7 @@ namespace CryptoSimulator.Services
                         _transactionRepository.Insert(transaction);
                         DeleteAllCoinsFromUser(coinsWithSameName);
                         wallet.Cash += transaction.TotalPrice;
-                        wallet.MaxCoins += transaction.Quantity;
+                       // wallet.MaxCoins += transaction.Quantity;
                         var convertWallet = _mapper.Map<Wallet>(wallet);
                         _walletRepository.UpdateWallet(convertWallet, user);
                         return CalculateYield(model);
@@ -98,7 +99,7 @@ namespace CryptoSimulator.Services
                         _transactionRepository.Insert(transaction);
                         DeleteAllNeededCoins(coinsWithSameName, model.Amount);
                         wallet.Cash += transaction.TotalPrice;
-                        wallet.MaxCoins += transaction.Quantity;
+                       // wallet.MaxCoins += transaction.Quantity;
                         var convertWallet = _mapper.Map<Wallet>(wallet);
                         _walletRepository.UpdateWallet(convertWallet, user);
                         user.Transactions.Add(transaction);
