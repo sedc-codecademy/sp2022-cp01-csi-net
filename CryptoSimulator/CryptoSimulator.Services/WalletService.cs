@@ -82,7 +82,7 @@ namespace CryptoSimulator.Services
                         _transactionRepository.Insert(transaction);
                         DeleteAllCoinsFromUser(coinsWithSameName);
                         wallet.Cash += transaction.TotalPrice;
-                        wallet.MaxCoins += transaction.Quantity;
+                        // wallet.MaxCoins += transaction.Quantity;
                         var convertWallet = _mapper.Map<Wallet>(wallet);
                         _walletRepository.UpdateWallet(convertWallet, user);
                         return CalculateYield(model);
@@ -105,7 +105,7 @@ namespace CryptoSimulator.Services
                         _transactionRepository.Insert(transaction);
                         DeleteAllNeededCoins(coinsWithSameName, model.Amount);
                         wallet.Cash += transaction.TotalPrice;
-                        wallet.MaxCoins += transaction.Quantity;
+                        //wallet.MaxCoins += transaction.Quantity;
                         var convertWallet = _mapper.Map<Wallet>(wallet);
                         _walletRepository.UpdateWallet(convertWallet, user);
                         user.Transactions.Add(transaction);
@@ -128,7 +128,8 @@ namespace CryptoSimulator.Services
             var wallet = GetByUserId(model.UserId);
             // Get the current price of the coin from coingecko api
             var coinPrice = _coinService.GetPriceByCoinId(model.CoinId);
-            var coin = new Coin
+            var existing = wallet.Coins.FirstOrDefault(x=>x.CoinId == model.CoinId);
+            var coin = existing != null ? existing : new Coin
             {
                 CoinId = model.CoinId,
                 Name = model.Name,
@@ -152,7 +153,7 @@ namespace CryptoSimulator.Services
             var allCoins = _coinRepository.GetAllCoins(wallet.Id);
             var differentCoinsCount = allCoins.DistinctBy(c => c.CoinId).ToList().Count;
             bool isCoinMaxPassed = differentCoinsCount >= wallet.MaxCoins;
-            bool isCoinNewInWallet = allCoins.Any(c => c.CoinId == coin.CoinId);
+            bool isCoinNewInWallet = !allCoins.Any(c => c.CoinId == coin.CoinId);
 
             if (isCoinMaxPassed && !isCoinNewInWallet)
             {
