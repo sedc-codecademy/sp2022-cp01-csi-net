@@ -23,9 +23,9 @@ namespace CryptoSimulator.DataAccess.Repositories
         public Wallet GetByUserId(int userId)
         {
             var wallet = _context.Wallets.FirstOrDefault(x => x.UserId == userId);
-
             if (wallet != null)
             {
+                wallet.Coins = _context.Coins.Where(x => x.WalletId == wallet.Id).ToList();
                 return wallet;
             }
             return wallet = new Wallet();
