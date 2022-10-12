@@ -12,7 +12,7 @@ namespace CryptoSimulator.DataAccess.Repositories.Interfaces
         public Transaction GetById(int id);
         public void Insert(Transaction transaction);
 
-        public List<Transaction> GetAllUserTransactions(int userId);
+        public IEnumerable<Transaction> GetAllUserTransactions(int userId);
 
         public List<Transaction> GetAllUserTransactionsCoinName(int userId, string coinName);
     }

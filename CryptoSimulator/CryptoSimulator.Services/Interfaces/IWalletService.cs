@@ -1,4 +1,5 @@
-﻿using CryptoSimulator.ServiceModels.WalletModels;
+﻿using CryptoSimulator.DataModels.Models;
+using CryptoSimulator.ServiceModels.WalletModels;
 
 namespace CryptoSimulator.Services.Interfaces
 {
@@ -11,5 +12,6 @@ namespace CryptoSimulator.Services.Interfaces
         public double AddCash(int userId, double amount);
         public bool SetMaxCoinLimit(int userId, int limit);
         public double GetUserCash(int userId);
+        public IEnumerable<Transaction> GetUsersTransactions(int userId);
     }
 }
