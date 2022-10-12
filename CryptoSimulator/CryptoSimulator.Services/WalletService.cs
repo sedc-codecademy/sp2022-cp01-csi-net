@@ -53,8 +53,9 @@ namespace CryptoSimulator.Services
             try
             {
 
-                var wallet = GetByUserId(model.UserId);
+                
                 var user = _userRepository.GetById(model.UserId);
+                var wallet = _walletRepository.GetWalletOnly(user.Id);
                 var coin = _coinRepository.GetCoin(wallet.Id, model.Name);
                 var coinsWithSameName = _coinRepository.GetAllCoinsInWallet(wallet.Id, model.Name);
                 var amountOfCoinsWithSameName = AmountOfCoinsWithSameNameInWallet(coinsWithSameName);
