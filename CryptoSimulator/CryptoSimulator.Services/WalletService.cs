@@ -61,6 +61,7 @@ namespace CryptoSimulator.Services
                 var amountOfCoinsWithSameName = AmountOfCoinsWithSameNameInWallet(coinsWithSameName);
                 var priceBoughtOfCoins = PriceBoughtOfCoins(coinsWithSameName);
                 var coinPrice = _coinService.GetPriceByCoinId(model.CoinId);
+                var yield = CalculateYield(model);
                 if (coin != null)
                 {
                     if (model.Amount > amountOfCoinsWithSameName)
@@ -86,7 +87,7 @@ namespace CryptoSimulator.Services
                         // wallet.MaxCoins += transaction.Quantity;
                         var convertWallet = _mapper.Map<Wallet>(wallet);
                         _walletRepository.UpdateWallet(convertWallet, user);
-                        return CalculateYield(model);
+                        return yield;
 
                     }
                     else if (model.Amount < amountOfCoinsWithSameName)
@@ -110,7 +111,7 @@ namespace CryptoSimulator.Services
                         var convertWallet = _mapper.Map<Wallet>(wallet);
                         _walletRepository.UpdateWallet(convertWallet, user);
                         user.Transactions.Add(transaction);
-                        return CalculateYield(model);
+                        return yield;
                     }
 
                 }
