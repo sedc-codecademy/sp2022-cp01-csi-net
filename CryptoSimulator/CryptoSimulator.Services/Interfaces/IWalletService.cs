@@ -1,4 +1,5 @@
-﻿using CryptoSimulator.ServiceModels.WalletModels;
+﻿using CryptoSimulator.DataModels.Models;
+using CryptoSimulator.ServiceModels.WalletModels;
 
 namespace CryptoSimulator.Services.Interfaces
 {
@@ -7,9 +8,10 @@ namespace CryptoSimulator.Services.Interfaces
         public WalletDto GetByUserId(int userId);
         public double SellCoin(BuySellCoinModel model);
         public double BuyCoin(BuySellCoinModel model);
-        // public double CalculateYield(BuySellCoinModel model);
+        public double CalculateYield(BuySellCoinModel model);
         public double AddCash(int userId, double amount);
-        public void SetMaxCoinLimit(int userId, int limit);
-        public bool IsCoinLimitReached(int walletId);
+        public bool SetMaxCoinLimit(int userId, int limit);
+        public double GetUserCash(int userId);
+        public IEnumerable<Transaction> GetUsersTransactions(int userId);
     }
 }

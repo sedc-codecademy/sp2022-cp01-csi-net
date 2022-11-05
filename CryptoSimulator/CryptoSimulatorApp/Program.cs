@@ -2,6 +2,8 @@ using CryptoSimulator.Common.Mappers;
 using CryptoSimulator.Common.Models;
 using CryptoSimulator.Configurations.DependencyInjection;
 using System.Text;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +34,11 @@ builder.Services
     .AddJwtTokenConfiguration(secret)
     .AddSwaggerConfiguration();
 
-
+JsonSerializerOptions options = new()
+{
+    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+    WriteIndented = true
+};
 
 var app = builder.Build();
 
@@ -47,6 +53,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

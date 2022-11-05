@@ -8,7 +8,7 @@ namespace CryptoSimulator.DataAccess.Repositories
 {
     public class WalletRepository : BaseRepository, IWalletRepository
     {
-        
+
         public WalletRepository(CryptoSimulatorDbContext context) : base(context)
         {
 
@@ -17,26 +17,19 @@ namespace CryptoSimulator.DataAccess.Repositories
         public Wallet GetById(int id)
         {
             return _context.Wallets.SingleOrDefault(w => w.Id == id);
-           
+
         }
 
         public Wallet GetByUserId(int userId)
         {
             var wallet = _context.Wallets.FirstOrDefault(x => x.UserId == userId);
-           
             if (wallet != null)
             {
+                wallet.Coins = _context.Coins.Where(x => x.WalletId == wallet.Id).ToList();
                 return wallet;
             }
-           return wallet = new Wallet();
+            return wallet = new Wallet();
         }
-
-        // We may not need this method
-
-        //public IEnumerable<Coin> GetAllCoins(int walletId)
-        //{
-        //    return _context.Coins.Where(c => c.WalletId == walletId);
-        //}
 
         public void AddCoin()
         {
@@ -48,29 +41,27 @@ namespace CryptoSimulator.DataAccess.Repositories
 
         }
 
-        public void UpdateWallet(Wallet wallet,User user)
+        public void UpdateWallet(Wallet wallet, User user)
         {
-            
             _context.Entry(user).State = EntityState.Detached;
             _context.Wallets.Update(wallet);
             _context.SaveChanges();
-           
         }
 
         public void Detach(Wallet entity)
         {
-           
-          
+
+
         }
 
-        public int CoinsLimit(int userId)
+        public Wallet GetWalletOnly(int userId)
         {
-            var coinsLimit = _context.Wallets.FirstOrDefault(x => x.UserId == userId);
-            if(coinsLimit != null)
+            var wallet = _context.Wallets.FirstOrDefault(x => x.UserId == userId);
+            if(wallet != null)
             {
-                return coinsLimit.MaxCoins;
+                return wallet;
             }
-            return -1;
+            return new Wallet();
         }
     }
 }
